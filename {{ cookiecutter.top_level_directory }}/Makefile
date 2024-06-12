@@ -3,8 +3,9 @@ PACKAGE_DIR := src/${PACKAGE}
 MODULES := $(wildcard $(PACKAGE_DIR)/*.py)
 
 # For additional vebosity, execute these in your shell before make
-# export UV_PREVIEW=1
 # export RUST_LOG=trace
+
+export UV_PREVIEW=1
 
 # MAIN TASKS ##################################################################
 
