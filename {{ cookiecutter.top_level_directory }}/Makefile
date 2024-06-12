@@ -2,8 +2,9 @@ PACKAGE := {{ cookiecutter.package_name }}
 PACKAGE_DIR := src/${PACKAGE}
 MODULES := $(wildcard $(PACKAGE_DIR)/*.py)
 
-export UV_PREVIEW = 1
-export RUST_LOG=trace
+# For additional vebosity, execute these in your shell before make
+# export UV_PREVIEW=1
+# export RUST_LOG=trace
 
 # MAIN TASKS ##################################################################
 
