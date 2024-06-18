@@ -92,3 +92,5 @@ if __name__ == "__main__":
         delete(relpath="bin/verchew")
         delete(relpath="bin/checksum")
         delete(relpath="bin/bootstrap")
+        if not with_cli:
+            delete(relpath="bin")
