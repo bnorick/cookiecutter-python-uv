@@ -20,13 +20,12 @@ msg() {
 die() {
   local msg=$1
   msg "$msg"
-  kill -SIGINT $$
+  exit 1
 }
 
 cleanup() {
   trap - SIGINT SIGTERM ERR EXIT
   # script cleanup here
-  popd 2>/dev/null
 }
 
 # ref: https://stackoverflow.com/a/246128
@@ -38,5 +37,9 @@ while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 SCRIPT_DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 PROJECT_DIR=$( dirname "${SCRIPT_DIR}" )
+
+if [[ "{{ "${" }}{{ cookiecutter.package_name.upper() }}_ENV_SOURCED:-0}" != "1" ]]; then
+    die "${RED}ERROR:${NOFORMAT} {{ cookiecutter.project_name }} env must be sourced before running {{cookiecutter.package_name}} CLI, e.g.,\n  $ source ${PROJECT_DIR}/env"
+fi
 
 just -f "${PROJECT_DIR}/justfile" run {{ cookiecutter.package_name }} "$@"

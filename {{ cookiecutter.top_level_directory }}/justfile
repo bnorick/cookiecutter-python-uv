@@ -5,13 +5,11 @@ package_dir := "src" / package
 
 export {{ cookiecutter.package_name.upper() }}_CLI_PWD := invocation_directory()
 
-{%- if cookiecutter._is_monorepo_tools or cookiecutter._in_monorepo %}
-monorepo_env_sourced := if env("MONOREPO_ENV_SOURCED", "0") != "1" {
-    error("Monorepo env must be sourced before running just recipes for projects.")
+env_sourced := if env("{{ cookiecutter.package_name.upper() }}_ENV_SOURCED", "0") != "1" {
+    error("{{ cookiecutter.project_name }} env must be sourced before running just recipes.")
 } else {
     "1"
 }
-{%- endif %}
 
 default:
   just --list

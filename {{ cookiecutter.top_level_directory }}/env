@@ -213,4 +213,6 @@ fi
 bash "{{ "${" + cookiecutter.package_name.upper() + "_PROJECT_DIR}/bin/bootstrap" }}"
 {%- endif %}
 
+export {{ cookiecutter.package_name.upper() }}_ENV_SOURCED=1
+
 set +u

@@ -5,6 +5,8 @@ import sys
 
 import click
 {% elif cookiecutter.command_line_interface|lower == 'simple-parsing' %}
+# ruff: noqa: RUF009
+
 import dataclasses
 import inspect
 import pathlib
