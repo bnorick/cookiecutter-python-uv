@@ -15,11 +15,11 @@ from typing import Union
 import simple_parsing
 {%- endif %}
 
-MONOREPO_CLI_PWD = os.getenv("MONOREPO_CLI_PWD")
-if MONOREPO_CLI_PWD is not None:
-    os.chdir(MONOREPO_CLI_PWD)
+{{ cookiecutter.package_name.upper() }}_CLI_PWD = os.getenv("{{ cookiecutter.package_name.upper() }}_CLI_PWD")
+if {{ cookiecutter.package_name.upper() }}_CLI_PWD is not None:
+    os.chdir({{ cookiecutter.package_name.upper() }}_CLI_PWD)
 
-{%- if cookiecutter.command_line_interface|lower == 'click' %}
+{% if cookiecutter.command_line_interface|lower == 'click' -%}
 @click.command()
 def main() -> int:
     """Console script for {{cookiecutter.package_name}}."""
@@ -38,6 +38,28 @@ class GlobalArguments:
         if self.verbose:
             log.reset()
             log.init(verbose=True)
+
+
+@dataclasses.dataclass(kw_only=True)
+class Action1(GlobalArguments):
+    """Action1"""
+
+    foo: str
+    bar: int
+
+    def run(self):
+        print(f"{self.foo=} {self.bar=}")
+
+
+@dataclasses.dataclass(kw_only=True)
+class Action2(GlobalArguments):
+    """Action2"""
+
+    path: pathlib.Path
+    hello: str = "world"
+
+    def run(self):
+        print(f"{self.path=} {self.hello=}")
 
 
 @dataclasses.dataclass

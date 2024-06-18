@@ -83,3 +83,12 @@ if __name__ == "__main__":
     no_license = "{{ cookiecutter.open_source_license }}" == "None"
     if no_license:
         delete(relpath="LICENSE")
+
+    in_monorepo = "{{ cookiecutter._in_monorepo }}" == "True"
+    if in_monorepo:
+        # delete bin files in a monorepo, the monorepo tools project
+        # will include these and always have its env sourced before a
+        # project is interacted with
+        delete(relpath="bin/verchew")
+        delete(relpath="bin/checksum")
+        delete(relpath="bin/bootstrap")

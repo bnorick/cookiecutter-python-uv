@@ -1,0 +1,82 @@
+export UV_PREVIEW := "1"
+
+package := "{{ cookiecutter.package_name }}"
+package_dir := "src" / package
+
+export {{ cookiecutter.package_name.upper() }}_CLI_PWD := invocation_directory()
+
+{%- if cookiecutter._is_monorepo_tools or cookiecutter._in_monorepo %}
+monorepo_env_sourced := if env("MONOREPO_ENV_SOURCED", "0") != "1" {
+    error("Monorepo env must be sourced before running just recipes for projects.")
+} else {
+    "1"
+}
+{%- endif %}
+
+default:
+  just --list
+
+install:
+    uv lock
+    uv sync --extra test
+
+dev:
+    uv run ptw
+
+ipython:
+    uv run ipython --ipython-dir=notebooks --profile-dir=notebooks/.ipython_profile
+
+# Start Jupyter in the notebooks/demo directory, cleaning all output
+demo:
+    uv run nbstripout notebooks/demos/*.ipynb 2>/dev/null || true
+    uv run jupyter notebook --ServerApp.root_dir=notebooks --ServerApp.preferred_dir=notebooks/demos --allow-root --ip 0.0.0.0 --port 8888
+
+# Start Jupyter in the notebooks directory 
+notebook:
+    uv run jupyter notebook --ServerApp.root_dir=notebooks --allow-root --ip 0.0.0.0 --port 8888
+
+{% raw -%}
+ruff action="check":
+    @printf '\n#### RUFF\n'
+    uv run ruff check {{package_dir}} tests{{ if action == "check" {" --output-format=full --no-fix"} else {""} }}
+
+black action="check":
+    @printf '\n#### BLACK\n'
+    uv run black {{package_dir}} tests{{ if action == "check" {" --diff"} else {""} }}
+
+deptry:
+    @printf '\n#### DEPTRY\n'
+    uv run deptry --config pyproject.toml {{package_dir}} tests
+
+mypy:
+    @printf '\n#### MYPY\n'
+    uv run mypy {{package_dir}}
+
+format:
+    just ruff fix
+    just black fix
+
+check:
+    -just mypy
+    -just deptry
+    -just ruff
+    -just black
+
+# Run unit and integration tests
+test:
+	uv run pytest --random --doctest-modules
+
+# Run unit and integration tests multiple times
+test-repeat count="5":
+	uv run pytest --count={{count}} --random --doctest-modules --exitfirst
+
+# Cleans up
+clean:
+    rm -rf .venv .cache
+
+# Runs the a command using `uv run` with the passed args
+[no-exit-message]
+run command *args:
+    @uv run {{command}} {{args}}
+
+{% endraw %}

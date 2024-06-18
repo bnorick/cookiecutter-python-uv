@@ -1,3 +1,7 @@
+# Binaries
+bin/just
+bin/uv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

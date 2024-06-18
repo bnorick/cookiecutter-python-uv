@@ -6,6 +6,8 @@
   "full_name": "First Last",
   "email": "you@example.com",
   "version": "0.1.0",
-  "command_line_interface": ["None", "Click"],
-  "open_source_license": ["None", "MIT", "BSD-3-Clause", "ISC", "Apache-2.0", "GPL-3.0-only"]
+  "command_line_interface": ["None", "click", "simple-parsing"],
+  "open_source_license": ["None", "MIT", "BSD-3-Clause", "ISC", "Apache-2.0", "GPL-3.0-only"],
+  "_is_monorepo_tools": false,
+  "_in_monorepo": false
 }
